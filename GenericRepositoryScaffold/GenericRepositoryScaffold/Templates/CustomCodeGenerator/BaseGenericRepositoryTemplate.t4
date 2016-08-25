@@ -1,0 +1,48 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Data.Entity" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ parameter name="ModelType" type="EnvDTE.CodeType" #>
+<#@ parameter name="ClassName" type="System.String" #>
+<#@ parameter name="NameSpace" type="System.String" #>
+
+
+namespace <#= NameSpace #>
+{
+    public abstract class <#= ClassName #><C> where C: DbContext, new()
+    {
+		private C _entities;
+        protected C Context
+        {
+            get
+            {
+                return _entities;
+            }
+            set
+            {
+                _entities = value;
+            }
+        }
+
+
+        public <#= ClassName #>(C dbContext)
+        {
+            if (_entities == null)
+            {
+                _entities = dbContext;
+            }
+        }
+        public void Save()
+        {
+            _entities.SaveChanges();
+        }
+
+        public void Dispose()
+        {
+            _entities.Dispose();
+        }
+    }
+}

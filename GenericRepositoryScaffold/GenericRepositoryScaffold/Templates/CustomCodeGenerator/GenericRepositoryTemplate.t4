@@ -1,0 +1,70 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System" #>
+<#@ import namespace="System.Data.Entity" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ parameter name="ModelType" type="EnvDTE.CodeType" #>
+<#@ parameter name="ClassName" type="System.String" #>
+<#@ parameter name="ParentClassName" type="System.String" #>
+<#@ parameter name="InterfaceName" type="System.String" #>
+<#@ parameter name="NameSpace" type="System.String" #>
+
+
+namespace <#= NameSpace #>
+{
+    public abstract class <#= ClassName #><C, T> : <#= ParentClassName #><C>, <#= InterfaceName #><T> where T : class where C : DbContext, new()
+    {
+        public <#= ClassName #>(C dbContext): base(dbContext)
+        {
+            
+        }
+
+        public IQueryable<T> All
+        {
+
+            get { return Context.Set<T>(); }
+        }
+
+        public IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = Context.Set<T>();
+            foreach (var includeProperty in includeProperties)
+            {
+                query = query.Include(includeProperty);
+            }
+            return query;
+        }
+
+        public IQueryable<T> FindWhere(Expression<Func<T, bool>> conditionParam)
+        {
+            IQueryable<T> query = Context.Set<T>();
+            query = query.Where(conditionParam);
+            return query;
+        }
+
+        public T Find(int id)
+        {
+            return Context.Set<T>().Find(id);
+        }
+
+        public void Insert(T TEntry)
+        {
+            Context.Set<T>().Add(TEntry);
+        }
+
+        public void Update(T TEntry)
+        {
+            Context.Entry(TEntry).State = EntityState.Modified;
+        }
+
+        public void Delete(int id)
+        {
+            var item = Context.Set<T>().Find(id);
+            Context.Set<T>().Remove(item);
+        }
+
+        
+    }
+}
