@@ -1,6 +1,10 @@
-﻿using GenericRepositoryScaffold.UI;
+﻿using GenericRepositoryScaffold.Helper;
+using GenericRepositoryScaffold.UI;
 using Microsoft.AspNet.Scaffolding;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using Microsoft.Build.Evaluation;
 
 namespace GenericRepositoryScaffold
 {
@@ -42,24 +46,31 @@ namespace GenericRepositoryScaffold
         /// </summary>
         public override void GenerateCode()
         {
-            // Get the selected code type
-            //var codeType = _viewModel.SelectedModelType.CodeType;
+            try
+            {
+                // Get the selected code type
+                //var codeType = _viewModel.SelectedModelType.CodeType;
 
-            string baseClassName = "BaseGenericRepository";
-            string childClassName = "GenericRepository";
-            string interfaceName = "IGenericRepository";
-            string projectNameSpace = Context.ActiveProject.Name;
-            string classNameSpace = projectNameSpace + ".Models";
-            string interfaceNameSpace = projectNameSpace + ".Interfaces";
+                string baseClassName = "BaseGenericRepository";
+                string childClassName = "GenericRepository";
+                string interfaceName = "IGenericRepository";
+                string baseClassTemplateName = "BaseGenericRepository.cs";
+                string childClassTemplateName = "GenericRepository.cs";
+                string interfaceTemplateName = "IGenericRepository.cs";
+                string projectNameSpace = Context.ActiveProject.Name;
+                string classNameSpace = projectNameSpace + ".Models";
+                string interfaceNameSpace = projectNameSpace + ".Interfaces";
+                var selectionRelativePath = GetSelectedRelativePath();
+                var project = Context.ActiveProject;
 
-            // Setup the scaffolding item creation parameters to be passed into the T4 template.
-            var baseParameters = new Dictionary<string, object>()
+                // Setup the scaffolding item creation parameters to be passed into the T4 template.
+                var baseParameters = new Dictionary<string, object>()
             {
                 { "ClassName", baseClassName },
                 { "NameSpace", classNameSpace }
             };
 
-            var childParameters = new Dictionary<string, object>()
+                var childParameters = new Dictionary<string, object>()
             {
                 { "ClassName", childClassName },
                 { "ParentClassName", baseClassName },
@@ -67,35 +78,84 @@ namespace GenericRepositoryScaffold
                 { "NameSpace", classNameSpace }
             };
 
-            var interfaceParameters = new Dictionary<string, object>()
+                var interfaceParameters = new Dictionary<string, object>()
             {
                 { "InterfaceName", interfaceName },
                 { "NameSpace", interfaceNameSpace }
             };
 
-            this.AddFolder(Context.ActiveProject, "Models");
-            this.AddFolder(Context.ActiveProject, "Interfaces");
+                var classTemplatesPath = "Repository\\Models";
+                var interfaceTemplatesPath = "Repository\\Interfaces";
 
-            // Add the custom scaffolding item from T4 template.
-            this.AddFileFromTemplate(Context.ActiveProject,
-                "Models",
-                "GenericRepositoryTemplate",
-                childParameters,
+                var baseClassTemplatePath = Path.Combine("", baseClassTemplateName);
+                var childClassTemplatePath = Path.Combine("", childClassTemplateName);
+                var interfaceTemplatePath = Path.Combine("", interfaceTemplateName);
+
+                AddFolderIfNotExist(project, classTemplatesPath);
+                AddFolderIfNotExist(project, interfaceTemplatesPath);
+
+                // Add the custom scaffolding item from T4 template.
+                AddFileFromTemplate(
+                    project: project,
+                    outputPath: baseClassTemplatePath,
+                    templateName: baseClassTemplatePath,
+                    templateParameters: baseParameters,
                 skipIfExists: false);
 
-            this.AddFileFromTemplate(Context.ActiveProject,
-                "Models",
-                "BaseGenericRepositoryTemplate",
-                baseParameters,
+                AddFileFromTemplate(
+                    project: project,
+                    outputPath: childClassTemplatePath,
+                    templateName: childClassTemplatePath,
+                    templateParameters: childParameters,
                 skipIfExists: false);
 
-            this.AddFileFromTemplate(Context.ActiveProject,
-                "Interfaces",
-                "IGenericRepositoryTemplate",
-                interfaceParameters,
+                AddFileFromTemplate(
+                    project: project,
+                    outputPath: interfaceTemplatePath,
+                    templateName: interfaceTemplatePath,
+                    templateParameters: interfaceParameters,
                 skipIfExists: false);
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
         }
 
+        private string GetSelectedRelativePath()
+        {
+            return Context.ActiveProjectItem == null ? string.Empty : ProjectItemHelper.GetProjectRelativePath(Context.ActiveProjectItem);
+        }
 
+        private string GetDefaultNamespace()
+        {
+            return Context.ActiveProjectItem == null
+                ? Context.ActiveProject.GetDefaultNamespace()
+                : Context.ActiveProjectItem.GetDefaultNamespace();
+        }
+
+        private void AddFolderIfNotExist(EnvDTE.Project project, string projectRelativePath)
+        {
+            try
+            {
+                var projectPath = project.GetFullPath();
+                if (!Directory.Exists(Path.Combine(projectPath, @projectRelativePath)))
+                {
+                    AddFolder(project, projectRelativePath);
+                }
+                var pCollection = new ProjectCollection();
+                var p = pCollection.LoadProject(@project.FullName);
+                p.AddItem("Folder", @projectRelativePath);
+                p.Save();
+                pCollection.UnloadProject(p);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
     }
 }
