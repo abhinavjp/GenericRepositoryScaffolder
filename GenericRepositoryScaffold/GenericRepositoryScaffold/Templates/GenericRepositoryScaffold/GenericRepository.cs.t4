@@ -8,16 +8,18 @@
 <#@ parameter name="ClassName" type="System.String" #>
 <#@ parameter name="ParentClassName" type="System.String" #>
 <#@ parameter name="InterfaceName" type="System.String" #>
+<#@ parameter name="InterfaceNameSpace" type="System.String" #>
 <#@ parameter name="NameSpace" type="System.String" #>
 using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using <#= InterfaceNameSpace #>;
 
 
 namespace <#= NameSpace #>
 {
-    public abstract class <#= ClassName #><C, T> : <#= ParentClassName #><C>, <#= InterfaceName #><T> where T : class where C : DbContext, new()
+    public abstract partial class <#= ClassName #><C, T> : <#= ParentClassName #><C>, <#= InterfaceName #><T> where T : class where C : DbContext, new()
     {
         public <#= ClassName #>(C dbContext): base(dbContext)
         {
@@ -66,8 +68,11 @@ namespace <#= NameSpace #>
         {
             var item = Context.Set<T>().Find(id);
             Context.Set<T>().Remove(item);
-        }
+        }        
+    }
 
-        
+	public abstract partial class <#= ClassName #><C, T>
+    {
+        //Insert your custom methods to interact with context here(If you want to)
     }
 }

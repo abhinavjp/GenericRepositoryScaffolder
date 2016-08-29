@@ -2,14 +2,16 @@
 using GenericRepositoryScaffold.UI;
 using Microsoft.AspNet.Scaffolding;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Build.Evaluation;
 using Microsoft.AspNet.Scaffolding.NuGet;
+using NuGet;
 
 namespace GenericRepositoryScaffold
 {
-    public class CustomCodeGenerator : CodeGenerator
+    public class GenericRepositoryScaffold : CodeGenerator
     {
         CustomViewModel _viewModel;
 
@@ -18,7 +20,7 @@ namespace GenericRepositoryScaffold
         /// </summary>
         /// <param name="context">Context of the current code generation operation based on how scaffolder was invoked(such as selected project/folder) </param>
         /// <param name="information">Code generation information that is defined in the factory class.</param>
-        public CustomCodeGenerator(
+        public GenericRepositoryScaffold(
             CodeGenerationContext context,
             CodeGeneratorInformation information)
             : base(context, information)
@@ -33,14 +35,17 @@ namespace GenericRepositoryScaffold
                 try
                 {
                     List<NuGetPackage> t = new List<NuGetPackage>();
-                    NuGetPackage demoPackage = new NuGetPackage("EntityFramework",
-                                            "6.1.3",
-                                            new NuGetSourceRepository("https://packages.nuget.org/api/v2"));
-
-                    var nugetService = (INuGetService)Context.ServiceProvider.GetService(typeof(INuGetService));
-                    nugetService.InstallPackage(Context.ActiveProject, demoPackage);
-                    t.Add(demoPackage);
-                    return (IEnumerable<NuGetPackage>)t;
+                    string[] packageIds = new string[] { "EntityFramework" };
+                    IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
+                    foreach (var packageId in packageIds)
+                    {
+                        var packageVersion = repo.FindPackagesById(packageId).Where(p => p.IsLatestVersion).Select(p => p.Version.ToString()).Max();
+                        NuGetPackage package = new NuGetPackage(packageId,
+                                                packageVersion,
+                                                new NuGetSourceRepository("https://packages.nuget.org/api/v2"));
+                        t.Add(package);
+                    }
+                    return t;
 
                 }
                 catch (Exception ex)
@@ -83,8 +88,8 @@ namespace GenericRepositoryScaffold
                 string childClassTemplateName = "GenericRepository";
                 string interfaceTemplateName = "IGenericRepository";
                 string projectNameSpace = Context.ActiveProject.Name;
-                string classNameSpace = projectNameSpace + ".Models";
-                string interfaceNameSpace = projectNameSpace + ".Interfaces";
+                string classNameSpace = projectNameSpace + ".Repository.Models";
+                string interfaceNameSpace = projectNameSpace + ".Repository.Interfaces";
                 var selectionRelativePath = GetSelectedRelativePath();
                 var project = Context.ActiveProject;
 
@@ -100,6 +105,7 @@ namespace GenericRepositoryScaffold
                 { "ClassName", childClassName },
                 { "ParentClassName", baseClassName },
                 { "InterfaceName", interfaceName },
+                { "InterfaceNameSpace", interfaceNameSpace },
                 { "NameSpace", classNameSpace }
             };
 

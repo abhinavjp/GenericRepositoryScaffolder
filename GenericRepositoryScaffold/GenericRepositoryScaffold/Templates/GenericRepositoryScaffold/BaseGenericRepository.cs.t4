@@ -7,10 +7,7 @@
 <#@ parameter name="ModelType" type="EnvDTE.CodeType" #>
 <#@ parameter name="ClassName" type="System.String" #>
 <#@ parameter name="NameSpace" type="System.String" #>
-using System;
 using System.Data.Entity;
-using System.Linq;
-using System.Linq.Expressions;
 
 namespace <#= NameSpace #>
 {

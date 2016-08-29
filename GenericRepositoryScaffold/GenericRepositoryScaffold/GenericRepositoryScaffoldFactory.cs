@@ -11,22 +11,22 @@ using System.Windows.Media.Imaging;
 namespace GenericRepositoryScaffold
 {
     [Export(typeof(CodeGeneratorFactory))]
-    public class CustomCodeGeneratorFactory : CodeGeneratorFactory
+    public class GenericRepositoryScaffoldFactory : CodeGeneratorFactory
     {
         /// <summary>
-        ///  Information about the code generator goes here.
+        ///  Information about the GenericRepositoryScaffold.
         /// </summary>
         private static CodeGeneratorInformation _info = new CodeGeneratorInformation(
-            displayName: "Genric Repository Scaffolder",
-            description: "This scaffolder creates generic repository.",
+            displayName: "Generic Repository Scaffolder",
+            description: "This scaffolder creates generic repository which follows unit of work pattern.",
             author: "Abhinav",
             version: new Version(1, 0, 0, 0),
-            id: typeof(CustomCodeGenerator).Name,
+            id: typeof(GenericRepositoryScaffold).Name,
             icon: ToImageSource(Resources._TemplateIconSample),
-            gestures: new[] { "Controller", "View", "Area" },
-            categories: new[] { Categories.Common, Categories.MvcController, Categories.Other });
+            gestures: new[] { "Repository", "EntityFramework" },
+            categories: new[] { Categories.Common, Categories.Other });
 
-        public CustomCodeGeneratorFactory()
+        public GenericRepositoryScaffoldFactory()
             : base(_info)
         {
         }
@@ -37,7 +37,7 @@ namespace GenericRepositoryScaffold
         /// <returns>Instance of CodeGenerator.</returns>
         public override ICodeGenerator CreateInstance(CodeGenerationContext context)
         {
-            return new CustomCodeGenerator(context, Information);
+            return new GenericRepositoryScaffold(context, Information);
         }
 
         /// <summary>

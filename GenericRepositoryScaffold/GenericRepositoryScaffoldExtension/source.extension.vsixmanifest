@@ -4,8 +4,9 @@
     <Identity Id="GenericRepositoryScaffoldExtension..40e7bb7e-f72d-44cf-8439-2567be2590c6" Version="1.0" Language="en-US" Publisher="Abhinav" />
     <DisplayName>GenericRepositoryScaffoldExtension</DisplayName>
     <Description xml:space="preserve">Scaffolder to create generic repository using unit of work pattern.</Description>
+    <ReleaseNotes>InstallationDummyFile.txt</ReleaseNotes>
   </Metadata>
-  <Installation>
+  <Installation AllUsers="true">
     <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[14.0,15.0)" />
     <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Community" />
     <InstallationTarget Version="[14.0,15.0)" Id="Microsoft.VisualStudio.Enterprise" />
