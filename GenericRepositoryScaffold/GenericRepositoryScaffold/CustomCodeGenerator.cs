@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.Build.Evaluation;
+using Microsoft.AspNet.Scaffolding.NuGet;
 
 namespace GenericRepositoryScaffold
 {
@@ -23,6 +24,30 @@ namespace GenericRepositoryScaffold
             : base(context, information)
         {
             _viewModel = new CustomViewModel(Context);
+        }
+
+        public override IEnumerable<NuGetPackage> Dependencies
+        {
+            get
+            {
+                try
+                {
+                    List<NuGetPackage> t = new List<NuGetPackage>();
+                    NuGetPackage demoPackage = new NuGetPackage("EntityFramework",
+                                            "6.1.3",
+                                            new NuGetSourceRepository("https://packages.nuget.org/api/v2"));
+
+                    var nugetService = (INuGetService)Context.ServiceProvider.GetService(typeof(INuGetService));
+                    nugetService.InstallPackage(Context.ActiveProject, demoPackage);
+                    t.Add(demoPackage);
+                    return (IEnumerable<NuGetPackage>)t;
+
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+            }
         }
 
 
@@ -54,9 +79,9 @@ namespace GenericRepositoryScaffold
                 string baseClassName = "BaseGenericRepository";
                 string childClassName = "GenericRepository";
                 string interfaceName = "IGenericRepository";
-                string baseClassTemplateName = "BaseGenericRepository.cs";
-                string childClassTemplateName = "GenericRepository.cs";
-                string interfaceTemplateName = "IGenericRepository.cs";
+                string baseClassTemplateName = "BaseGenericRepository";
+                string childClassTemplateName = "GenericRepository";
+                string interfaceTemplateName = "IGenericRepository";
                 string projectNameSpace = Context.ActiveProject.Name;
                 string classNameSpace = projectNameSpace + ".Models";
                 string interfaceNameSpace = projectNameSpace + ".Interfaces";
@@ -87,9 +112,11 @@ namespace GenericRepositoryScaffold
                 var classTemplatesPath = "Repository\\Models";
                 var interfaceTemplatesPath = "Repository\\Interfaces";
 
-                var baseClassTemplatePath = Path.Combine("", baseClassTemplateName);
-                var childClassTemplatePath = Path.Combine("", childClassTemplateName);
-                var interfaceTemplatePath = Path.Combine("", interfaceTemplateName);
+                var baseClassTemplatePath = Path.Combine(classTemplatesPath, baseClassTemplateName);
+                var childClassTemplatePath = Path.Combine(classTemplatesPath, childClassTemplateName);
+                var interfaceTemplatePath = Path.Combine(interfaceTemplatesPath, interfaceTemplateName);
+
+                //var path = Path.Combine(Path.GetDirectoryName(),);
 
                 AddFolderIfNotExist(project, classTemplatesPath);
                 AddFolderIfNotExist(project, interfaceTemplatesPath);
@@ -98,21 +125,21 @@ namespace GenericRepositoryScaffold
                 AddFileFromTemplate(
                     project: project,
                     outputPath: baseClassTemplatePath,
-                    templateName: baseClassTemplatePath,
+                    templateName: baseClassTemplateName,
                     templateParameters: baseParameters,
                 skipIfExists: false);
 
                 AddFileFromTemplate(
                     project: project,
                     outputPath: childClassTemplatePath,
-                    templateName: childClassTemplatePath,
+                    templateName: childClassTemplateName,
                     templateParameters: childParameters,
                 skipIfExists: false);
 
                 AddFileFromTemplate(
                     project: project,
                     outputPath: interfaceTemplatePath,
-                    templateName: interfaceTemplatePath,
+                    templateName: interfaceTemplateName,
                     templateParameters: interfaceParameters,
                 skipIfExists: false);
 
