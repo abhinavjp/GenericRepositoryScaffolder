@@ -1,0 +1,60 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter name="ModelType" type="EnvDTE.CodeType" #>
+<#@ parameter name="ClassName" type="System.String" #>
+<#@ parameter name="UnitOfWorkClassName" type="System.String" #>
+<#@ parameter name="UnitOfWorkInterfaceName" type="System.String" #>
+<#@ parameter name="RepositoryClassName" type="System.String" #>
+<#@ parameter name="RepositoryInterfaceName" type="System.String" #>
+<#@ parameter name="RepositoryInterfaceNamespace" type="System.String" #>
+<#@ parameter name="RepositoryClassNamespace" type="System.String" #>
+<#@ parameter name="NameSpace" type="System.String" #>
+using StructureMap;
+using StructureMap.Pipeline;
+using <#= RepositoryInterfaceNamespace #>;
+using <#= RepositoryClassNamespace #>;
+
+namespace <#= NameSpace #>
+{
+	public static class <#= ClassName #>
+    {
+        private static Container container = new Container();
+        private static bool isInitialized = false;
+
+        private static void Configure()
+        {
+            container.Configure(x =>
+            {
+                // Repository
+                x.For(typeof(<#= RepositoryInterfaceName #><,>)).Use(typeof(<#= RepositoryClassName #><,>));
+                x.For(typeof(<#= UnitOfWorkInterfaceName #><>)).Use(typeof(<#= UnitOfWorkClassName #><>));
+
+                // Services
+               
+            });
+            isInitialized = true;
+        }
+
+        public static T GetInstance<T>()
+        {
+            if (!isInitialized)
+            {
+                Configure();
+            }
+            return container.GetInstance<T>();
+        }
+
+        public static T GetInstance<T>(ExplicitArguments args)
+        {
+            if (!isInitialized)
+            {
+                Configure();
+            }
+            return container.GetInstance<T>(args);
+        }
+    }
+}

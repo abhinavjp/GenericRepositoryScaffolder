@@ -35,7 +35,7 @@ namespace GenericRepositoryScaffold
                 try
                 {
                     List<NuGetPackage> t = new List<NuGetPackage>();
-                    string[] packageIds = new string[] { "EntityFramework" };
+                    string[] packageIds = new string[] { "EntityFramework", "structuremap" };
                     IPackageRepository repo = PackageRepositoryFactory.Default.CreateRepository("https://packages.nuget.org/api/v2");
                     foreach (var packageId in packageIds)
                     {
@@ -81,46 +81,78 @@ namespace GenericRepositoryScaffold
                 // Get the selected code type
                 //var codeType = _viewModel.SelectedModelType.CodeType;
 
-                string baseClassName = "BaseGenericRepository";
-                string childClassName = "GenericRepository";
-                string interfaceName = "IGenericRepository";
-                string baseClassTemplateName = "BaseGenericRepository";
-                string childClassTemplateName = "GenericRepository";
-                string interfaceTemplateName = "IGenericRepository";
+                string unitOfWorkClassName = "UnitOfWork";
+                string unitOfWorkInterfaceName = "IUnitOfWork";
+                string genericRepositoryClassName = "GenericRepository";
+                string genericRepositoryInterfaceName = "IGenericRepository";
+                string structureMapClassName = "StructureMapConfigurator";
+                string unitOfWorkTemplateName = "UnitOfWorkPattern";
+                string unitOfWorkInterfaceTemplateName = "IUnitOfWorkPattern";
+                string genericRepositoryTemplateName = "GenericRepository";
+                string genericRepositoryInterfaceTemplateName = "IGenericRepository";
+                string structureMapTemplateName = "StructureMapConfigurator";
                 string projectNameSpace = Context.ActiveProject.Name;
                 string classNameSpace = projectNameSpace + ".Repository.Models";
                 string interfaceNameSpace = projectNameSpace + ".Repository.Interfaces";
+                string structureMapNameSpace = projectNameSpace + ".Infrastructure";
                 var selectionRelativePath = GetSelectedRelativePath();
                 var project = Context.ActiveProject;
 
                 // Setup the scaffolding item creation parameters to be passed into the T4 template.
-                var baseParameters = new Dictionary<string, object>()
+                var unitOfWorkParameters = new Dictionary<string, object>()
             {
-                { "ClassName", baseClassName },
+                { "ClassName", unitOfWorkClassName },
+                { "InterfaceName", unitOfWorkInterfaceName },
+                { "RepositoryInterfaceName", genericRepositoryInterfaceName },
+                { "RepositoryInterfaceNamespace", interfaceNameSpace },
+                { "NameSpace", classNameSpace },
+                { "StructureMapNameSpace", structureMapNameSpace },
+                { "StructureMapClassName", structureMapClassName }
+            };
+
+                var unitOfWorkInterfaceParameters = new Dictionary<string, object>()
+            {
+                { "InterfaceName", unitOfWorkInterfaceName },
+                { "RepositoryInterfaceName", genericRepositoryInterfaceName },
+                { "RepositoryInterfaceNamespace", interfaceNameSpace },
                 { "NameSpace", classNameSpace }
             };
 
-                var childParameters = new Dictionary<string, object>()
+                var genericRepositoryParameters = new Dictionary<string, object>()
             {
-                { "ClassName", childClassName },
-                { "ParentClassName", baseClassName },
-                { "InterfaceName", interfaceName },
+                { "ClassName", genericRepositoryClassName },
+                { "InterfaceName", genericRepositoryInterfaceName },
                 { "InterfaceNameSpace", interfaceNameSpace },
                 { "NameSpace", classNameSpace }
             };
 
-                var interfaceParameters = new Dictionary<string, object>()
+                var genericRepositoryInterfaceParameters = new Dictionary<string, object>()
             {
-                { "InterfaceName", interfaceName },
+                { "InterfaceName", genericRepositoryInterfaceName },
                 { "NameSpace", interfaceNameSpace }
+            };
+
+                var structureMapParameters = new Dictionary<string, object>()
+            {
+                { "ClassName", structureMapClassName },
+                { "UnitOfWorkClassName", unitOfWorkClassName },
+                { "UnitOfWorkInterfaceName", unitOfWorkInterfaceName },
+                { "RepositoryClassName", genericRepositoryClassName },
+                { "RepositoryInterfaceName", genericRepositoryInterfaceName },
+                { "RepositoryInterfaceNamespace", interfaceNameSpace },
+                { "RepositoryClassNamespace", classNameSpace },
+                { "NameSpace", structureMapNameSpace }
             };
 
                 var classTemplatesPath = "Repository\\Models";
                 var interfaceTemplatesPath = "Repository\\Interfaces";
+                var structureMapTemplatesPath = "Infrastructure";
 
-                var baseClassTemplatePath = Path.Combine(classTemplatesPath, baseClassTemplateName);
-                var childClassTemplatePath = Path.Combine(classTemplatesPath, childClassTemplateName);
-                var interfaceTemplatePath = Path.Combine(interfaceTemplatesPath, interfaceTemplateName);
+                var unitOfWorkTemplatePath = Path.Combine(classTemplatesPath, unitOfWorkTemplateName);
+                var unitOfWorkInterfaceTemplatePath = Path.Combine(interfaceTemplatesPath, unitOfWorkInterfaceTemplateName);
+                var genericRepositoryTemplatePath = Path.Combine(classTemplatesPath, genericRepositoryTemplateName);
+                var genericRepositoryInterfaceTemplatePath = Path.Combine(interfaceTemplatesPath, genericRepositoryInterfaceTemplateName);
+                var structureMapTemplatePath = Path.Combine(structureMapTemplatesPath, structureMapTemplateName);
 
                 //var path = Path.Combine(Path.GetDirectoryName(),);
 
@@ -130,23 +162,37 @@ namespace GenericRepositoryScaffold
                 // Add the custom scaffolding item from T4 template.
                 AddFileFromTemplate(
                     project: project,
-                    outputPath: baseClassTemplatePath,
-                    templateName: baseClassTemplateName,
-                    templateParameters: baseParameters,
+                    outputPath: unitOfWorkTemplatePath,
+                    templateName: unitOfWorkTemplateName,
+                    templateParameters: unitOfWorkParameters,
                 skipIfExists: false);
 
                 AddFileFromTemplate(
                     project: project,
-                    outputPath: childClassTemplatePath,
-                    templateName: childClassTemplateName,
-                    templateParameters: childParameters,
+                    outputPath: unitOfWorkInterfaceTemplatePath,
+                    templateName: unitOfWorkInterfaceTemplateName,
+                    templateParameters: unitOfWorkInterfaceParameters,
                 skipIfExists: false);
 
                 AddFileFromTemplate(
                     project: project,
-                    outputPath: interfaceTemplatePath,
-                    templateName: interfaceTemplateName,
-                    templateParameters: interfaceParameters,
+                    outputPath: genericRepositoryTemplatePath,
+                    templateName: genericRepositoryTemplateName,
+                    templateParameters: genericRepositoryParameters,
+                skipIfExists: false);
+
+                AddFileFromTemplate(
+                    project: project,
+                    outputPath: genericRepositoryInterfaceTemplatePath,
+                    templateName: genericRepositoryInterfaceTemplateName,
+                    templateParameters: genericRepositoryInterfaceParameters,
+                skipIfExists: false);
+
+                AddFileFromTemplate(
+                    project: project,
+                    outputPath: structureMapTemplatePath,
+                    templateName: structureMapTemplateName,
+                    templateParameters: structureMapParameters,
                 skipIfExists: false);
 
             }

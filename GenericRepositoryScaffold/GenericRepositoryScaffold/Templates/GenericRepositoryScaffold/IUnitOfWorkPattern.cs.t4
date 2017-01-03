@@ -1,0 +1,22 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter name="ModelType" type="EnvDTE.CodeType" #>
+<#@ parameter name="RepositoryInterfaceName" type="System.String" #>
+<#@ parameter name="RepositoryInterfaceNamespace" type="System.String" #>
+<#@ parameter name="InterfaceName" type="System.String" #>
+<#@ parameter name="NameSpace" type="System.String" #>
+using System.Data.Entity;
+using <#= RepositoryInterfaceNamespace #>;
+
+namespace <#= NameSpace #>
+{
+    public interface <#= InterfaceName #><TContext> where TContext : DbContext
+    {
+        <#= RepositoryInterfaceName #><TEntity, TContext> GetRepository<TEntity>() where TEntity : class;
+        void Commit();
+    }
+}

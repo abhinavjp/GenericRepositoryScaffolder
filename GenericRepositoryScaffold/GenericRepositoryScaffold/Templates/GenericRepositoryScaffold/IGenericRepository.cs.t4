@@ -9,20 +9,20 @@
 <#@ parameter name="NameSpace" type="System.String" #>
 using System;
 using System.Linq;
+using System.Data.Entity;
 using System.Linq.Expressions;
 
 
 namespace <#= NameSpace #>
 {
-    public interface <#= InterfaceName #><T>
+    public interface <#= InterfaceName #><TEntity, TContext> where TEntity : class where TContext : DbContext
     {
-        IQueryable<T> All { get; }
-        IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties);
-        IQueryable<T> FindWhere(Expression<Func<T, bool>> conditionParam);
-        T Find(int id);
-        void Insert(T TEntry);
-        void Update(T TEntry);
+        IQueryable<TEntity> All { get; }
+        IQueryable<TEntity> AllIncluding(params Expression<Func<TEntity, object>>[] includeProperties);
+        IQueryable<TEntity> FindWhere(Expression<Func<TEntity, bool>> conditionParam);
+        TEntity Find(int id);
+        void Insert(TEntity TEntry);
+        void Update(TEntity TEntry);
         void Delete(int id);
-        void Save();
     }
 }

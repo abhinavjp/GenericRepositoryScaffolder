@@ -77,7 +77,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Templates\GenericRepositoryScaffold\BaseGenericRepository.cs.t4">
+    <None Include="Templates\GenericRepositoryScaffold\IUnitOfWorkPattern.cs.t4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\GenericRepositoryScaffold\StructureMapConfigurator.cs.t4">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\GenericRepositoryScaffold\UnitOfWorkPattern.cs.t4">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Templates\GenericRepositoryScaffold\IGenericRepository.cs.t4">

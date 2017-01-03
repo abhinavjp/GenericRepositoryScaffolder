@@ -6,7 +6,6 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ parameter name="ModelType" type="EnvDTE.CodeType" #>
 <#@ parameter name="ClassName" type="System.String" #>
-<#@ parameter name="ParentClassName" type="System.String" #>
 <#@ parameter name="InterfaceName" type="System.String" #>
 <#@ parameter name="InterfaceNameSpace" type="System.String" #>
 <#@ parameter name="NameSpace" type="System.String" #>
@@ -19,22 +18,25 @@ using <#= InterfaceNameSpace #>;
 
 namespace <#= NameSpace #>
 {
-    public abstract partial class <#= ClassName #><C, T> : <#= ParentClassName #><C>, <#= InterfaceName #><T> where T : class where C : DbContext, new()
+    public abstract partial class <#= ClassName #><TEntity, TContext> : <#= InterfaceName #><TEntity, TContext> where TEntity : class where TContext : DbContext
     {
-        public <#= ClassName #>(C dbContext): base(dbContext)
+		internal TContext context;
+        internal DbSet<TEntity> dbSet;
+
+        public <#= ClassName #>(TContext context)
         {
-            
+            this.context = context;
+            this.dbSet = context.Set<TEntity>();
         }
 
-        public IQueryable<T> All
+        public IQueryable<TEntity> All
         {
-
-            get { return Context.Set<T>(); }
+            get { return dbSet; }
         }
 
-        public IQueryable<T> AllIncluding(params Expression<Func<T, object>>[] includeProperties)
+        public IQueryable<TEntity> AllIncluding(params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            IQueryable<T> query = Context.Set<T>();
+            IQueryable<TEntity> query = dbSet;
             foreach (var includeProperty in includeProperties)
             {
                 query = query.Include(includeProperty);
@@ -42,36 +44,36 @@ namespace <#= NameSpace #>
             return query;
         }
 
-        public IQueryable<T> FindWhere(Expression<Func<T, bool>> conditionParam)
+        public IQueryable<TEntity> FindWhere(Expression<Func<TEntity, bool>> conditionParam)
         {
-            IQueryable<T> query = Context.Set<T>();
+            IQueryable<TEntity> query = dbSet;
             query = query.Where(conditionParam);
             return query;
         }
 
-        public T Find(int id)
+        public TEntity Find(int id)
         {
-            return Context.Set<T>().Find(id);
+            return dbSet.Find(id);
         }
 
-        public void Insert(T TEntry)
+        public virtual void Insert(TEntity TEntry)
         {
-            Context.Set<T>().Add(TEntry);
+            dbSet.Add(TEntry);
         }
 
-        public void Update(T TEntry)
+        public virtual void Update(TEntity TEntry)
         {
-            Context.Entry(TEntry).State = EntityState.Modified;
+            context.Entry(TEntry).State = EntityState.Modified;
         }
 
         public void Delete(int id)
         {
-            var item = Context.Set<T>().Find(id);
-            Context.Set<T>().Remove(item);
-        }        
+            var item = dbSet.Find(id);
+            dbSet.Remove(item);
+        }    
     }
 
-	public abstract partial class <#= ClassName #><C, T>
+	public abstract partial class <#= ClassName #><TEntity, TContext>
     {
         //Insert your custom methods to interact with context here(If you want to)
     }

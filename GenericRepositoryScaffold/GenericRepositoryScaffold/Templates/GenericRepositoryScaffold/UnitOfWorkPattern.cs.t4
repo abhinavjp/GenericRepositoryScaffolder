@@ -1,0 +1,45 @@
+﻿<#@ template language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="EnvDTE" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ parameter name="ModelType" type="EnvDTE.CodeType" #>
+<#@ parameter name="ClassName" type="System.String" #>
+<#@ parameter name="InterfaceName" type="System.String" #>
+<#@ parameter name="RepositoryInterfaceName" type="System.String" #>
+<#@ parameter name="RepositoryInterfaceNamespace" type="System.String" #>
+<#@ parameter name="StructureMapNameSpace" type="System.String" #>
+<#@ parameter name="StructureMapClassName" type="System.String" #>
+<#@ parameter name="NameSpace" type="System.String" #>
+using <#= RepositoryInterfaceNamespace #>;
+using System;
+using System.Data.Entity;
+using StructureMap.Pipeline;
+using static <#= StructureMapNameSpace #>.<#= StructureMapClassName #>;
+
+namespace <#= NameSpace #>
+{
+    public class <#= ClassName #><TContext> : <#= InterfaceName #><TContext> where TContext: DbContext
+    {
+        private readonly TContext _context;
+        public <#= ClassName #>(TContext context)
+        {
+            if (context == null)
+            {
+                throw new ArgumentNullException("Context was not supplied");
+            }
+            _context = context;
+        }
+        public <#= RepositoryInterfaceName #><TEntity, TContext> GetRepository<TEntity>() where TEntity : class
+        {
+            var args = new ExplicitArguments();
+            args.Set(_context);
+            return GetInstance<IGenericRepository<TEntity, TContext>>(args);
+        }
+        public void Commit()
+        {
+            _context.SaveChanges();
+        }
+    }
+}
