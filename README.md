@@ -43,7 +43,7 @@ Unit of work pattern needs to be declared only once for all repositories in a sp
 ## Authors
 
 * **Abhinav Pisharody** - *Initial work* - [GithubProfile](https://github.com/abhinavjp)
-* **Salim Tamimi** - *Core Guidance For Unit Of Work Pattern* - [LinkedInProfile](https://www.linkedin.com/in/salim-tamimi-a-40761837)
+* **Salim Tamimi** - *Unit Of Work Pattern Guidance* - [LinkedInProfile](https://www.linkedin.com/in/salim-tamimi-a-40761837)
 * **Milan Vadaliya** - *Helping Hand* - [LinkedInProfile](https://in.linkedin.com/in/milan-vadaliya-6271535a)
 
 ## Acknowledgments
