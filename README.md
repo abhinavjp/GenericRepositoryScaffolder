@@ -36,7 +36,7 @@ private EmployeeSystemEntities _context = new EmployeeSystemEntities();
 var args = new ExplicitArguments();
 args.Set(_context);
 private readonly IUnitOfWork<EmployeeSystemEntities> _unitOfWork = GetInstance<IUnitOfWork<EmployeeSystemEntities>>(args);
-private readonly IGenericRepository<Employee, EmployeeSystemEntities> _entityRepository = _unitOfWork.GetRepository<Employee, EmployeeSystemEntities>();
+private readonly IGenericRepository<Employee, EmployeeSystemEntities> _entityRepository = _unitOfWork.GetRepository<Employee>();
 ```
 Unit of work pattern needs to be declared only once for all repositories in a specific class.
 
