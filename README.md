@@ -1,6 +1,6 @@
 # Unit Of Work Pattern with Generic Repository
 
-A scaffolder which generates generic repository for entity framework with Unit Of Work pattern
+A scaffolder which generates generic repository for entity framework with Unit Of Work pattern  
 Note: Unfortunately scaffolder only works with ASP.Net projects.
 
 ## Getting Started
