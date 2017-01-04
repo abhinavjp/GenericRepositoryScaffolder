@@ -8,7 +8,7 @@ The Project and the vsix are both available here.
 As this is an open source project, the project can be modified according to custom requirements.
 
 ### Installing
-Note:	This project also uses latest version of structuremap and entity framework.
+Note:	This project also uses latest version of structuremap and entity framework.  
 		So a file for structuremap is automatically created which maps the classes with interfaces for dependency injection.
 
  1. Just download the vsix extension and then install it. (Works only with Visual Studio 2015. Untested in other versions.)
@@ -17,10 +17,10 @@ Note:	This project also uses latest version of structuremap and entity framework
  4. Thats it! All files are automatically generated!
 
 ## How to start after installing
-Perform the steps mentioned below on the service you need to use the repository.
+Perform the steps mentioned below on the service you need to use the repository.  
 Include the namespace of structuremap as below:
 ```
-using static <StructureMapNamespace>.StructureMapConfigurator;
+using static Your_StructureMap_Namespace_Created_By_Scaffolder.StructureMapConfigurator;
 ```
 
 Also there is a need for `StructureMap.Pipeline` namespace used when a parameterized constructor is in use and hence also include that namespace:
@@ -28,8 +28,8 @@ Also there is a need for `StructureMap.Pipeline` namespace used when a parameter
 using StructureMap.Pipeline;
 ```
 
-You can now use your dbset of entity framework in the manner described below.
-For Example there is an entity named Employee and the context name is EmployeeSystemEntities:
+You can now use your dbset of entity framework in the manner described below.  
+For Example there is an entity named `Employee` and the context name is `EmployeeSystemEntities`:
 
 ```
 private EmployeeSystemEntities _context = new EmployeeSystemEntities();
@@ -38,6 +38,7 @@ args.Set(_context);
 private readonly IUnitOfWork<EmployeeSystemEntities> _unitOfWork = GetInstance<IUnitOfWork<EmployeeSystemEntities>>(args);
 private readonly IGenericRepository<Employee, EmployeeSystemEntities> _entityRepository = _unitOfWork.GetRepository<Employee, EmployeeSystemEntities>();
 ```
+Unit of work pattern needs to be declared only once for all repositories in a specific class.
 
 ## Authors
 
@@ -47,6 +48,6 @@ private readonly IGenericRepository<Employee, EmployeeSystemEntities> _entityRep
 
 ## Acknowledgments
 
-* Understanding from [CodeProject](https://www.codeproject.com/articles/581487/unit-of-work-design-pattern)
+* Understanding of unit of work pattern from [CodeProject](https://www.codeproject.com/articles/581487/unit-of-work-design-pattern)
 * Dependency Injection using [StructureMap](http://structuremap.github.io/)
 * Learnt to make scaffolder with the help of a [MSDN Blog](https://blogs.msdn.microsoft.com/webdev/2014/04/03/creating-a-custom-scaffolder-for-visual-studio/) By [Joost de Nijs](https://social.msdn.microsoft.com/profile/Joost+de+Nijs)
