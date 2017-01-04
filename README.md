@@ -17,14 +17,27 @@ Note:	This project also uses latest version of structuremap and entity framework
  4. Thats it! All files are automatically generated!
 
 ## How to start after installing
+Perform the steps mentioned below on the service you need to use the repository.
+Include the namespace of structuremap as below:
+```
+using static <StructureMapNamespace>.StructureMapConfigurator;
+```
 
-You can now use your dbset of entity framework in the manner described below:
+Also there is a need for `StructureMap.Pipeline` namespace used when a parameterized constructor is in use and hence also include that namespace:
+```
+using StructureMap.Pipeline;
+```
+
+You can now use your dbset of entity framework in the manner described below.
+For Example there is an entity named Employee and the context name is EmployeeSystemEntities:
 
 ```
-private readonly IUnitOfWork<Entity_Context> _unitOfWork = GetInstance<IUnitOfWork<Entity_Context>>(args);;
-private readonly IGenericRepository<Entity_Name, Entity_Context> _entityRepository = _unitOfWork.GetRepository<Entity_Name, Entity_Context>();;
+private EmployeeSystemEntities _context = new EmployeeSystemEntities();
+var args = new ExplicitArguments();
+args.Set(_context);
+private readonly IUnitOfWork<EmployeeSystemEntities> _unitOfWork = GetInstance<IUnitOfWork<EmployeeSystemEntities>>(args);
+private readonly IGenericRepository<Employee, EmployeeSystemEntities> _entityRepository = _unitOfWork.GetRepository<Employee, EmployeeSystemEntities>();
 ```
-Entity_Context is the Entity Framework Context and Entity_Name is the name of class created when adding an EDMX.
 
 ## Authors
 
