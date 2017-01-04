@@ -11,18 +11,18 @@ As this is an open source project, the project can be modified according to cust
 Note:	This project also uses latest version of structuremap and entity framework.
 		So a file for structuremap is automatically created which maps the classes with interfaces for dependency injection.
 
- - Just download the vsix extension and then install it. (Works only with Visual Studio 2015. Untested in other versions.)
- - Right click on any project of an existing solution then click on Add, and click on New Scaffolded Item.
- - Select Generic Scaffolder 
- - Thats it! All files are automatically generated!
+ 1. Just download the vsix extension and then install it. (Works only with Visual Studio 2015. Untested in other versions.)
+ 2. Right click on any project of an existing solution then click on Add, and click on New Scaffolded Item.
+ 3. Select Generic Scaffolder 
+ 4. Thats it! All files are automatically generated!
 
 ## How to start after installing
 
 You can now use your dbset of entity framework in the manner described below:
 
 ```
-private readonly IUnitOfWork&lt;Entity_Context&gt; _unitOfWork = GetInstance&lt;IUnitOfWork&lt;Entity_Context&gt;&gt;(args);;
-private readonly IGenericRepository&lt;Entity_Name, Entity_Context&gt; _entityRepository = _unitOfWork.GetRepository&lt;Entity_Name, Entity_Context&gt;();;
+private readonly IUnitOfWork\<Entity_Context> _unitOfWork = GetInstance\<IUnitOfWork\<Entity_Context>>(args);;
+private readonly IGenericRepository\<Entity_Name, Entity_Context> _entityRepository = _unitOfWork.GetRepository\<Entity_Name, Entity_Context>();;
 ```
 Entity_Context is the Entity Framework Context and Entity_Name is the name of class created when adding an EDMX.
 
