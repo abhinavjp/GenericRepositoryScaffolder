@@ -21,8 +21,8 @@ Note:	This project also uses latest version of structuremap and entity framework
 You can now use your dbset of entity framework in the manner described below:
 
 ```
-private readonly IUnitOfWork\<Entity_Context> _unitOfWork = GetInstance\<IUnitOfWork\<Entity_Context>>(args);;
-private readonly IGenericRepository\<Entity_Name, Entity_Context> _entityRepository = _unitOfWork.GetRepository\<Entity_Name, Entity_Context>();;
+private readonly IUnitOfWork<Entity_Context> _unitOfWork = GetInstance<IUnitOfWork<Entity_Context>>(args);;
+private readonly IGenericRepository<Entity_Name, Entity_Context> _entityRepository = _unitOfWork.GetRepository<Entity_Name, Entity_Context>();;
 ```
 Entity_Context is the Entity Framework Context and Entity_Name is the name of class created when adding an EDMX.
 
@@ -34,3 +34,4 @@ Entity_Context is the Entity Framework Context and Entity_Name is the name of cl
 
 * Understanding from [CodeProject](https://www.codeproject.com/articles/581487/unit-of-work-design-pattern)
 * Dependency Injection using [StructureMap](http://structuremap.github.io/)
+* Learnt to make scaffolder with the help of [MSDN Blog](https://blogs.msdn.microsoft.com/webdev/2014/04/03/creating-a-custom-scaffolder-for-visual-studio/) By [Joost de Nijs](https://social.msdn.microsoft.com/profile/Joost+de+Nijs)
