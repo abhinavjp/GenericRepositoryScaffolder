@@ -28,10 +28,12 @@ Entity_Context is the Entity Framework Context and Entity_Name is the name of cl
 
 ## Authors
 
-* **Abhinav Pisharody** - *Initial work* - [abhinavjp](https://github.com/abhinavjp)
+* **Abhinav Pisharody** - *Initial work* - [GithubProfile](https://github.com/abhinavjp)
+* **Salim Tamimi** - *Core Guidance For Unit Of Work Pattern* - [LinkedInProfile](https://www.linkedin.com/in/salim-tamimi-a-40761837)
+* **Milan Vadaliya** - *Helping Hand* - [LinkedInProfile](https://in.linkedin.com/in/milan-vadaliya-6271535a)
 
 ## Acknowledgments
 
 * Understanding from [CodeProject](https://www.codeproject.com/articles/581487/unit-of-work-design-pattern)
 * Dependency Injection using [StructureMap](http://structuremap.github.io/)
-* Learnt to make scaffolder with the help of [MSDN Blog](https://blogs.msdn.microsoft.com/webdev/2014/04/03/creating-a-custom-scaffolder-for-visual-studio/) By [Joost de Nijs](https://social.msdn.microsoft.com/profile/Joost+de+Nijs)
+* Learnt to make scaffolder with the help of a [MSDN Blog](https://blogs.msdn.microsoft.com/webdev/2014/04/03/creating-a-custom-scaffolder-for-visual-studio/) By [Joost de Nijs](https://social.msdn.microsoft.com/profile/Joost+de+Nijs)
